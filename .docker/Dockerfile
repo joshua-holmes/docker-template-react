@@ -1,26 +1,19 @@
-FROM ruby:2.7.4-alpine
+FROM node:16-alpine
 
 # Install necessary dependencies
 RUN apk update && apk upgrade
-RUN apk add --no-cache build-base postgresql-dev postgresql-client bash tzdata
 
 # Prepare working directory.
-WORKDIR /ror
-COPY ./ror .
-RUN rm -fr ./client
-RUN gem install bundler:2.3.4
-RUN bundle install
-RUN bundle add tzinfo-data
-RUN bundle add tzinfo
+WORKDIR /app
+COPY ./app .
+RUN npm install
+RUN npm install -g serve
 
-# Prepare run file
-COPY ./.docker/run-app /usr/bin/
-RUN chmod +x /usr/bin/run-app
+# Build app
+RUN npm run build
 
-# Prepare entrypoint file
-COPY ./.docker/entrypoint.sh /usr/bin/
-RUN chmod +x /usr/bin/entrypoint.sh
-ENTRYPOINT ["entrypoint.sh"]
+# Cleanup
+RUN rm -fr node_modules public src
 
 # This is the command that starts the container
-CMD ["run-app"]
+CMD ["serve", "-s", "build"]

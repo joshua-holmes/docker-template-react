@@ -1,25 +1,7 @@
 #!/bin/bash
 set -e
 
-# Do not use this file if there is not React frontend
-
 # Sets DIRECTORY variable to current directory of this file
 DIRECTORY=$(dirname "${BASH_SOURCE[0]}")
 
-echo "---------------------------------------------------------------"
-echo "Building React app..."
-echo "---------------------------------------------------------------"
-npm run build --prefix $DIRECTORY/../ror/client
-
-rm -fr $DIRECTORY/../ror/public/*
-echo "---------------------------------------------------------------"
-echo "Removed existing static frontend files from ror/public/"
-echo "---------------------------------------------------------------"
-
-mv $DIRECTORY/../ror/client/build/* $DIRECTORY/../ror/public/
-echo "---------------------------------------------------------------"
-echo "Moved static files from React app into ror/public/"
-echo "---------------------------------------------------------------"
-
-echo "---------------------------------------------------------------"
-echo "Frontend successfully built into RoR application"
+npm run build --prefix $DIRECTORY/../app
